@@ -1,0 +1,10 @@
+# В репозитории — LF: стенд по ТЗ разворачивается на Ubuntu
+* text=auto eol=lf
+
+# Бинарные материалы не нормализуем
+*.pptx binary
+*.png binary
+*.jpg binary
+*.pdf binary
+*.docx binary
+*.zip binary

@@ -1,0 +1,33 @@
+# Сервис моделирования трассировки тепловых сетей — расчётный сервис (solver)
+# Python 3.11 (py -3.11). Локально — без Docker; в составе стенда — Dockerfile рядом.
+
+# --- HTTP ---
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+pydantic==2.10.4
+python-multipart==0.0.20   # приём загружаемых файлов (multipart/form-data)
+
+# --- Геометрия и проекции ---
+shapely==2.0.6
+pyproj==3.7.0
+
+# --- Растр и поиск пути ---
+numpy==2.2.1
+scipy==1.15.0
+scikit-image==0.25.0
+rasterio==1.4.3
+
+# --- Конфиги, данные ---
+PyYAML==6.0.2
+requests==2.32.3
+
+# --- Экспорт и картинки ---
+ezdxf==1.3.5
+reportlab==4.2.5
+matplotlib==3.11.2    # PNG-превью результата (case/preview_png.py)
+
+# --- Разработка ---
+pytest==8.3.4
+httpx==0.28.1        # TestClient для тестов API
+pypdf==6.15.0        # проверка содержимого сформированных PDF
+ruff==0.8.6

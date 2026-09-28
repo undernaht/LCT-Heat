@@ -1,0 +1,485 @@
+# Нормативные расстояния для модуля нормоконтроля.
+#
+# Источник: СП 124.13330.2012 «Тепловые сети», Приложение А (обязательное).
+# Полная выписка с оригинальными формулировками — docs/90-normatives.md
+#
+# ВНИМАНИЕ: значения извлечены из редакции НОСТРОЙ «для ознакомления» 11.08.2026.
+# СП действует с Изменениями № 1–4 — сверить с актуальной редакцией перед защитой.
+# В коде НЕТ ни одного числа из СП: всё читается отсюда.
+
+meta:
+  source: "СП 124.13330.2012 «Тепловые сети» (актуализированная редакция СНиП 41-02-2003)"
+  extracted: "2026-08-11"
+  verified: false          # ← поднять в true после сверки с актуальной редакцией
+
+# Параметры района. Меняются в UI, влияют на выбор правил.
+site:
+  soil: nonsubsiding       # nonsubsiding | subsiding_1  (просадочные грунты I типа)
+  system: closed           # closed | open — открытая система добавляет правила табл. А.2
+
+# ---------------------------------------------------------------------------
+# Расстояния по горизонтали (табл. А.3). Применяются, когда трасса ИДЁТ ВДОЛЬ
+# объекта, то есть не пересекает его геометрию.
+#
+# when — условия применимости правила:
+#   laying: channel | channelless | overhead
+#   soil:   nonsubsiding | subsiding_1
+#   du_lt / du_ge: диапазон условного прохода, мм
+#   pressure_class, voltage_kv_max: для газа и кабелей
+# ---------------------------------------------------------------------------
+horizontal:
+
+  # --- До фундаментов зданий и сооружений ---
+  - id: foundation.channel.nonsub.lt500
+    target: BUILDING
+    title: "До фундаментов зданий (канальная прокладка, от наружной стенки канала)"
+    when: {laying: channel, soil: nonsubsiding, du_lt: 500}
+    min_m: 2.0
+    clause: "табл. А.3"
+
+  - id: foundation.channel.nonsub.500_800
+    target: BUILDING
+    title: "До фундаментов зданий (канальная прокладка)"
+    when: {laying: channel, soil: nonsubsiding, du_ge: 500, du_lt: 900}
+    min_m: 5.0
+    clause: "табл. А.3"
+
+  - id: foundation.channel.nonsub.ge900
+    target: BUILDING
+    title: "До фундаментов зданий (канальная прокладка)"
+    when: {laying: channel, soil: nonsubsiding, du_ge: 900}
+    min_m: 8.0
+    clause: "табл. А.3"
+
+  - id: foundation.channel.sub1.lt500
+    target: BUILDING
+    title: "До фундаментов зданий (канальная, просадочные грунты I типа)"
+    when: {laying: channel, soil: subsiding_1, du_lt: 500}
+    min_m: 5.0
+    clause: "табл. А.3"
+
+  - id: foundation.channel.sub1.ge500
+    target: BUILDING
+    title: "До фундаментов зданий (канальная, просадочные грунты I типа)"
+    when: {laying: channel, soil: subsiding_1, du_ge: 500}
+    min_m: 8.0
+    clause: "табл. А.3"
+
+  - id: foundation.channelless.nonsub.lt500
+    target: BUILDING
+    title: "До фундаментов зданий (бесканальная прокладка, от оболочки)"
+    when: {laying: channelless, soil: nonsubsiding, du_lt: 500}
+    min_m: 5.0
+    clause: "табл. А.3"
+
+  - id: foundation.channelless.nonsub.500_800
+    target: BUILDING
+    title: "До фундаментов зданий (бесканальная прокладка)"
+    when: {laying: channelless, soil: nonsubsiding, du_ge: 500, du_lt: 800}
+    min_m: 7.0
+    clause: "табл. А.3"
+
+  - id: foundation.channelless.nonsub.ge800
+    target: BUILDING
+    title: "До фундаментов зданий (бесканальная прокладка)"
+    when: {laying: channelless, soil: nonsubsiding, du_ge: 800}
+    min_m: 9.0
+    clause: "табл. А.3"
+
+  - id: foundation.channelless.sub1.le100
+    target: BUILDING
+    title: "До фундаментов зданий (бесканальная, просадочные грунты I типа)"
+    when: {laying: channelless, soil: subsiding_1, du_lt: 101}
+    min_m: 5.0
+    clause: "табл. А.3"
+
+  - id: foundation.channelless.sub1.100_500
+    target: BUILDING
+    title: "До фундаментов зданий (бесканальная, просадочные грунты I типа)"
+    when: {laying: channelless, soil: subsiding_1, du_ge: 101, du_lt: 500}
+    min_m: 7.0
+    clause: "табл. А.3"
+
+  - id: foundation.channelless.sub1.500_800
+    target: BUILDING
+    title: "До фундаментов зданий (бесканальная, просадочные грунты I типа)"
+    when: {laying: channelless, soil: subsiding_1, du_ge: 500, du_lt: 800}
+    min_m: 8.0
+    clause: "табл. А.3"
+
+  - id: foundation.channelless.sub1.ge800
+    target: BUILDING
+    title: "До фундаментов зданий (бесканальная, просадочные грунты I типа)"
+    when: {laying: channelless, soil: subsiding_1, du_ge: 800}
+    min_m: 12.0
+    clause: "табл. А.3"
+
+  # --- До инженерных сетей ---
+  - id: utility.water
+    target: WATER
+    title: "До водопроводов"
+    when: {soil: nonsubsiding}
+    min_m: 1.5
+    clause: "табл. А.3"
+
+  - id: utility.water.sub1
+    target: WATER
+    title: "До водопроводов (просадочные грунты I типа)"
+    when: {soil: subsiding_1}
+    min_m: 2.5
+    clause: "табл. А.3"
+
+  - id: utility.storm
+    target: STORM
+    title: "До дренажей и дождевой канализации"
+    when: {}
+    min_m: 1.0
+    clause: "табл. А.3"
+
+  - id: utility.sewer.closed
+    target: SEWER
+    title: "До производственной и бытовой канализации (закрытая система теплоснабжения)"
+    when: {system: closed}
+    min_m: 1.0
+    clause: "табл. А.3"
+
+  - id: utility.gas.le03.channelless
+    target: GAS
+    title: "До газопроводов ≤ 0,3 МПа (бесканальная прокладка без попутного дренажа)"
+    when: {laying: channelless, pressure_class: "<=0.3"}
+    min_m: 1.0
+    clause: "табл. А.3"
+
+  - id: utility.gas.03_06.channelless
+    target: GAS
+    title: "До газопроводов 0,3–0,6 МПа (бесканальная прокладка без попутного дренажа)"
+    when: {laying: channelless, pressure_class: "0.3-0.6"}
+    min_m: 1.5
+    clause: "табл. А.3"
+
+  - id: utility.gas.06_12.channelless
+    target: GAS
+    title: "До газопроводов 0,6–1,2 МПа (бесканальная прокладка без попутного дренажа)"
+    when: {laying: channelless, pressure_class: "0.6-1.2"}
+    min_m: 2.0
+    clause: "табл. А.3"
+
+  - id: utility.gas.le06.channel
+    target: GAS
+    title: "До газопроводов ≤ 0,6 МПа (в каналах и тоннелях)"
+    when: {laying: channel, pressure_class_in: ["<=0.3", "0.3-0.6"]}
+    min_m: 2.0
+    clause: "табл. А.3"
+
+  - id: utility.gas.06_12.channel
+    target: GAS
+    title: "До газопроводов 0,6–1,2 МПа (в каналах и тоннелях)"
+    when: {laying: channel, pressure_class: "0.6-1.2"}
+    min_m: 4.0
+    clause: "табл. А.3"
+
+  - id: utility.power
+    target: POWER
+    title: "До силовых и контрольных кабелей до 35 кВ и маслонаполненных (до 220 кВ)"
+    when: {}
+    min_m: 2.0
+    clause: "табл. А.3"
+
+  - id: utility.comm
+    target: COMM
+    title: "До блока телефонной канализации, бронированного кабеля связи в трубах"
+    when: {}
+    min_m: 1.0
+    clause: "табл. А.3"
+
+  - id: utility.channels
+    target: CHANNEL
+    title: "До каналов и тоннелей различного назначения"
+    when: {}
+    min_m: 2.0
+    clause: "табл. А.3"
+
+  # --- До транспортной инфраструктуры ---
+  - id: transport.rail_1520_axis
+    target: RAIL_1520
+    title: "До оси ближайшего пути железной дороги колеи 1520 мм"
+    when: {}
+    min_m: 4.0
+    note: "но не менее глубины траншеи тепловой сети до подошвы насыпи"
+    clause: "табл. А.3"
+
+  - id: transport.rail_750_axis
+    target: RAIL_750
+    title: "До оси ближайшего пути железной дороги колеи 750 мм"
+    when: {}
+    min_m: 2.8
+    clause: "табл. А.3"
+
+  - id: transport.rail_electrified
+    target: RAIL_ELECTRIFIED
+    title: "До оси ближайшего пути электрифицированной железной дороги"
+    when: {}
+    min_m: 10.75
+    clause: "табл. А.3"
+
+  - id: transport.rail_earthworks
+    target: RAIL_EARTHWORKS
+    title: "До ближайшего сооружения земляного полотна железной дороги"
+    when: {}
+    min_m: 3.0
+    clause: "табл. А.3"
+
+  - id: transport.tram_axis
+    target: TRAM
+    title: "До оси ближайшего трамвайного пути"
+    when: {}
+    min_m: 2.8
+    clause: "табл. А.3"
+
+  - id: transport.kerb
+    target: KERB
+    title: "До бортового камня улицы, дороги (кромки проезжей части)"
+    when: {}
+    min_m: 1.5
+    clause: "табл. А.3"
+
+  - id: transport.ditch
+    target: DITCH
+    title: "До наружной бровки кювета или подошвы насыпи дороги"
+    when: {}
+    min_m: 1.0
+    clause: "табл. А.3"
+
+  - id: transport.bridge_support
+    target: BRIDGE_SUPPORT
+    title: "До фундаментов опор мостов, путепроводов"
+    when: {}
+    min_m: 2.0
+    clause: "табл. А.3"
+
+  # --- Опоры, мачты, ВЛ ---
+  - id: support.lighting
+    target: LIGHTING_POLE
+    title: "До мачт и столбов наружного освещения и сети связи"
+    when: {}
+    min_m: 1.0
+    clause: "табл. А.3"
+
+  - id: support.fence
+    target: FENCE_FOUNDATION
+    title: "До фундаментов ограждений и опор трубопроводов"
+    when: {}
+    min_m: 1.5
+    clause: "табл. А.3"
+
+  - id: support.ohl.le1
+    target: OHL_SUPPORT
+    title: "До фундаментов опор ВЛ до 1 кВ"
+    when: {voltage_kv_max: 1}
+    min_m: 1.0
+    clause: "табл. А.3"
+
+  - id: support.ohl.1_35
+    target: OHL_SUPPORT
+    title: "До фундаментов опор ВЛ 1–35 кВ"
+    when: {voltage_kv_min: 1, voltage_kv_max: 35}
+    min_m: 2.0
+    clause: "табл. А.3"
+
+  - id: support.ohl.gt35
+    target: OHL_SUPPORT
+    title: "До фундаментов опор ВЛ свыше 35 кВ"
+    when: {voltage_kv_min: 35}
+    min_m: 3.0
+    clause: "табл. А.3"
+
+  # --- Зелёные насаждения ---
+  - id: green.tree
+    target: TREE
+    title: "До ствола дерева"
+    when: {}
+    min_m: 2.0
+    clause: "табл. А.3"
+
+  - id: green.shrub
+    target: SHRUB
+    title: "До кустарников"
+    when: {}
+    min_m: 1.0
+    clause: "табл. А.3"
+
+  # --- Прочее ---
+  - id: other.metro.sealed
+    target: METRO_SEALED
+    title: "До сооружений метрополитена при обделке с наружной оклеечной изоляцией"
+    when: {}
+    min_m: 5.0
+    clause: "табл. А.3"
+
+  - id: other.metro.unsealed
+    target: METRO_UNSEALED
+    title: "До сооружений метрополитена без оклеечной гидроизоляции"
+    when: {}
+    min_m: 8.0
+    clause: "табл. А.3"
+
+  - id: other.fuel_station.channelless
+    target: FUEL_TANK
+    title: "До резервуаров АЗС (бесканальная прокладка)"
+    when: {laying: channelless}
+    min_m: 10.0
+    clause: "табл. А.3"
+
+  - id: other.fuel_station.channel
+    target: FUEL_TANK
+    title: "До резервуаров АЗС (канальная прокладка с вентшахтами)"
+    when: {laying: channel}
+    min_m: 15.0
+    clause: "табл. А.3"
+
+# ---------------------------------------------------------------------------
+# Расстояния по вертикали (табл. А.1). Применяются, когда трасса ПЕРЕСЕКАЕТ
+# объект. Пересечение по нормативам допустимо — нужно лишь разнести по высоте.
+# ---------------------------------------------------------------------------
+vertical:
+  - id: cross.pipes
+    targets: [WATER, STORM, SEWER, GAS]
+    title: "До водопровода, водостока, газопровода, канализации"
+    min_m: 0.20
+    clause: "табл. А.1"
+
+  - id: cross.comm_armored
+    targets: [COMM]
+    title: "До бронированных кабелей связи"
+    min_m: 0.50
+    clause: "табл. А.1"
+
+  - id: cross.power_le35
+    targets: [POWER]
+    title: "До силовых и контрольных кабелей до 35 кВ"
+    min_m: 0.50
+    min_m_constrained: 0.25
+    note: "0,25 м в стеснённых условиях при соблюдении температурного режима (прим. 5)"
+    clause: "табл. А.1"
+
+  - id: cross.comm_duct
+    targets: [COMM_DUCT]
+    title: "До блока телефонной канализации или бронированного кабеля связи в трубах"
+    min_m: 0.15
+    clause: "табл. А.1"
+
+  - id: cross.rail_public
+    targets: [RAIL_1520, RAIL_ELECTRIFIED]
+    title: "До подошвы рельсов железных дорог общей сети"
+    min_m: 2.0
+    clause: "табл. А.1"
+
+  - id: cross.rail_industrial
+    targets: [RAIL_750]
+    title: "До подошвы рельсов железных дорог промышленных предприятий"
+    min_m: 1.0
+    clause: "табл. А.1"
+
+  - id: cross.tram
+    targets: [TRAM]
+    title: "До подошвы рельсов трамвайных путей"
+    min_m: 1.0
+    clause: "табл. А.1"
+
+  - id: cross.road_major
+    targets: [ROAD_CATEGORY_I_III]
+    title: "До верха дорожного покрытия автодорог I, II и III категорий"
+    min_m: 1.0
+    clause: "табл. А.1"
+
+# ---------------------------------------------------------------------------
+# Заглубление от поверхности земли (табл. А.1, примечание 1)
+# ---------------------------------------------------------------------------
+burial_depth_min_m:
+  channel_top: 0.5           # до верха перекрытий каналов и тоннелей
+  chamber_top: 0.3           # до верха перекрытий камер
+  channelless_top: 0.7       # до верха оболочки бесканальной прокладки
+  channel_top_at_entry: 0.3  # на вводе в здание
+  channelless_top_at_entry: 0.5
+
+# ---------------------------------------------------------------------------
+# Гидравлика (раздел 8)
+# ---------------------------------------------------------------------------
+hydraulics:
+  roughness_m:
+    water_heat_network: 0.0005    # kэ, п. 8.5
+    steam: 0.0002
+    dhw: 0.001
+  min_inner_diameter_mm: 32       # п. 8.7
+  min_inner_diameter_dhw_circ_mm: 25
+  static_pressure_temp_c: 100     # п. 8.8
+  supply_return_same_diameter: true  # п. 8.6
+
+  # Проектная практика, а НЕ текст СП. Вынесено сюда, потому что меняется вместе
+  # с нормативным профилем и должно быть видно рядом с ним.
+  design:
+    r_max_pa_per_m: 80            # экономически целесообразные удельные потери
+    r_max_branch_pa_per_m: 100    # для ответвлений к отдельному зданию
+    v_max_m_s: 3.5                # предельная скорость
+    local_resistance_share: 0.3   # α — доля местных сопротивлений
+    water_density_kg_m3: 960      # ρ при рабочих температурах
+    # Располагаемый напор, который обязан остаться НА ВВОДЕ в здание — на ИТП,
+    # регулирующую арматуру и внутреннюю систему. Без него проверка вырождается:
+    # «напора хватило» означало бы, что на вводе остался ровно ноль.
+    required_head_at_consumer_m: 10.0
+    du_series_mm: [32, 40, 50, 65, 80, 100, 125, 150, 200, 250, 300, 350, 400, 500]
+
+# ---------------------------------------------------------------------------
+# Смягчение требований (Приложение Д, табл. Д.2)
+# ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# Вертикальная трассировка
+# ---------------------------------------------------------------------------
+vertical_design:
+  # Уклон тепловых сетей в сторону спускных устройств. СП 124.13330 требует
+  # не менее 0,002 независимо от направления движения теплоносителя.
+  min_slope: 0.002
+
+  # Глубже требуется отдельное обоснование: водопонижение, крепление стенок,
+  # иное конструктивное решение. Это не запрет, а граница обычного решения.
+  max_depth_m: 4.0
+
+  # Геометрия траншеи для двухтрубной прокладки
+  pipe_spacing_m: 0.30            # между трубами в свету
+  trench_side_clearance_m: 0.35   # от трубы до стенки траншеи
+
+  # Минимальное давление, при котором вода не вскипает при рабочей температуре.
+  # Считается по давлению насыщения: 130 °C → 0,27 МПа абс ≈ 17 м вод. ст. изб.
+  non_boiling_head_m:
+    "150": 38
+    "130": 17
+    "115": 8
+    "95": 3
+    default: 20
+
+  # Предельное рабочее давление в тепловых сетях — 1,6 МПа ≈ 163 м вод. ст.
+  max_working_head_m: 163
+
+compliance:
+  # ИНТЕРПРЕТАЦИЯ, а не текст СП. Расстояния табл. А.3 нормируют ПАРАЛЛЕЛЬНУЮ
+  # прокладку: идти вдоль чужой сети ближе норматива нельзя, а пересекать —
+  # можно, разойдясь по вертикали (табл. А.1). Различаем по длине участка
+  # вхождения трассы в нормативный коридор: короткий заход — это пересечение
+  # или подход к нему, длинный — следование вдоль.
+  following_threshold_m: 8.0
+
+  # Конфликт по вертикали в точке пересечения в проекте решается местным
+  # заглублением или футляром, а не переносом трассы. Поэтому такой конфликт —
+  # `conditional` с указанием требуемого заглубления, а не отказ. Отказ только
+  # если требуемое заглубление больше этого предела.
+  max_local_deepening_m: 2.5
+
+relaxation:
+  enabled: true
+  note: >
+    В стеснённых условиях расстояния допускается уменьшать при выполнении защитных
+    мероприятий (футляры, обоймы, усиленная гидро- и теплоизоляция). Поэтому
+    нарушение норматива даёт статус `conditional`, а не `fail`, если фактическое
+    расстояние не ниже доли `min_ratio` от нормативного.
+  min_ratio: 0.5
+  clause: "Приложение Д, табл. Д.2"

@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# Node
+node_modules/
+frontend/dist/
+*.tsbuildinfo
+
+# Java
+service/target/
+
+# Результаты локальных прогонов: пересоздаются расчётом
+data/cache/
+data/projects/
+backend/data/
+result*.geojson
+result*.png
+*.log
+
+# Материалы организаторов: в репозиторий кладём только конкурсный датасет,
+# чтобы сервис можно было запустить сразу после клонирования
+ресурсы/**
+!ресурсы/
+!ресурсы/распаковано/
+!ресурсы/распаковано/ТЗ/
+!ресурсы/распаковано/ТЗ/Датасет скорректированный.geojson
+ресурсы 1/
+
+# Окружение и секреты
+.env
+.env.local
+*.pem
+*.key

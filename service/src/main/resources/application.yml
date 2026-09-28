@@ -1,0 +1,53 @@
+# Приложение по ТЗ §3.2. Все внешние адреса — из переменных окружения,
+# значения по умолчанию — для локального запуска рядом с Python-сервисом.
+server:
+  port: 8080
+  # ТЗ: до 50 пользователей; расчёты идут в отдельном пуле (heat.solve.threads)
+  tomcat:
+    threads:
+      max: 64
+    max-swallow-size: -1
+
+spring:
+  application:
+    name: heat-network-service
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/heat}
+    username: ${SPRING_DATASOURCE_USERNAME:heat}
+    password: ${SPRING_DATASOURCE_PASSWORD:heat}
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+  sql:
+    init:
+      mode: always            # schema.sql идемпотентна (IF NOT EXISTS)
+  servlet:
+    multipart:
+      # ТЗ: входной файл до 3 ГБ. Tomcat пишет multipart на диск, начиная с
+      # порога, а transferTo переносит файл без чтения в память.
+      max-file-size: 3072MB
+      max-request-size: 3072MB
+      file-size-threshold: 1MB
+      location: ${HEAT_TMP_DIR:${java.io.tmpdir}}
+  web:
+    resources:
+      # Собранный фронтенд кладётся в classpath:/static при сборке образа
+      static-locations: classpath:/static/
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+heat:
+  data-dir: ${HEAT_DATA_DIR:./data/projects}
+  solver-url: ${HEAT_SOLVER_URL:http://localhost:8010}
+  # Таймаут одного расчёта: конкурсный набор — минута, запас на большие районы
+  solver-timeout-seconds: ${HEAT_SOLVER_TIMEOUT:1800}
+  solve-threads: ${HEAT_SOLVE_THREADS:2}
+
+logging:
+  level:
+    ru.lct.heat: INFO

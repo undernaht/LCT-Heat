@@ -1,0 +1,62 @@
+# Стенд по ТЗ §3.2: приложение (Java 11 / Spring Boot 2.6.3), расчётный
+# сервис (Python) и PostgreSQL. Формат файла — версия 3.8, совместимая с
+# docker-compose 1.29.2.
+#
+#   docker-compose up --build
+#
+# Приложение: http://localhost:8080 (Swagger — /swagger-ui.html)
+# Расчётный сервис напрямую (для отладки): http://localhost:8010/docs
+version: "3.8"
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: heat
+      POSTGRES_USER: heat
+      POSTGRES_PASSWORD: heat
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U heat -d heat"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  solver:
+    build: ./backend
+    environment:
+      HEAT_DATA_DIR: /data/projects
+    volumes:
+      - projects:/data
+    ports:
+      - "8010:8010"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8010/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      dockerfile: service/Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+      solver:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/heat
+      SPRING_DATASOURCE_USERNAME: heat
+      SPRING_DATASOURCE_PASSWORD: heat
+      HEAT_SOLVER_URL: http://solver:8010
+      HEAT_DATA_DIR: /data/projects
+    volumes:
+      - projects:/data
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:
+  projects:
